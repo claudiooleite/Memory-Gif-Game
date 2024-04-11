@@ -9,9 +9,9 @@ function GifViewer() {
 
   const fetchGif = async () => {
     try {
-      // const apiKey = '60k2XvJwmatoWlcE4TDNV8f3miQjcKuv';
-      const response = await fetch(`https://api.giphy.com/v1/gifs/random?api_key=60k2XvJwmatoWlcE4TDNV8f3miQjcKuv&tag=&rating=g`);
-      const { data } = await response.json();
+      const apiKey = 'eJ4xjmgMHEWBn7mRZN8ZqNragw0Rzzjq';
+      const response = await fetch(`https://api.giphy.com/v1/gifs/random?api_key=${apiKey}&tag=&rating=g`);
+      const { data } = await response.json(); 
       setGif(data);
     } catch (error) {
       console.error('Error fetching gif:', error);
@@ -23,10 +23,14 @@ function GifViewer() {
   };
 
   return (
-    <div>
-      {gif && <img src={gif.images.original.url} alt="Random Gif" />}
-      <button onClick={handleRefreshClick}>Refresh</button>
-    </div>
+    <>
+      <div className="gif-container">
+        {gif && <img className="gif-image" src={gif.images.original.url} alt="Random Gif" />}
+      </div>
+      <div>
+        <button onClick={handleRefreshClick}>Refresh</button>
+      </div>
+    </>
   );
 }
 
