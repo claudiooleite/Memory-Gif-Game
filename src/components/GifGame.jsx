@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Card, CardHeader, CardBody, CardFooter, Image, SimpleGrid } from '@chakra-ui/react'
+import { Card, Image, SimpleGrid, Button } from '@chakra-ui/react'
+import Scoreboard from './Socreboard';
 
 
 function GifViewer() {
