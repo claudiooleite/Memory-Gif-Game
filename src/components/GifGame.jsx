@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, Image, SimpleGrid, Button } from '@chakra-ui/react'
-import Scoreboard from './Socreboard';
 
 
-function GifViewer() {
+function GifViewer({ handleImageClick }) {
   const [gif, setGif] = useState([]);
   const [numGifs, setNumGifs] = useState(9);
   const fetchedGifsRef = useRef([]);
+  
 
   useEffect(() => {
     fetchGif();
@@ -16,7 +16,7 @@ function GifViewer() {
     console.log('Fetching GIFs...')
     try {
       if (fetchedGifsRef.current.length === 0) {
-        const apiKey = 'WF78jLTK7KdHUFF3D3lMToYck7xWqWYR';
+        const apiKey = 'JYnU7IUVIe3raO5IATiHnEmsXBdhaTWg';
         const fetchedGifs = [];
         for (let i = 0; i < numGifs; i++) {
           const response = await fetch(`https://api.giphy.com/v1/gifs/random?api_key=${apiKey}&tag=&rating=g`);
@@ -63,7 +63,7 @@ function GifViewer() {
                     width="100%"
                     height="100%"
                     objectFit="cover"
-                    onClick={shuffleImages}
+                    onClick={() => { handleImageClick(gif.id); shuffleImages(); }}
                     cursor="pointer"
                   />    
                 </Card>
