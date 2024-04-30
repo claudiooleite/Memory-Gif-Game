@@ -1,33 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Card, Image, SimpleGrid, Button } from '@chakra-ui/react'
-
+import { Card, Image, SimpleGrid, Radio, RadioGroup, Stack  } from '@chakra-ui/react';
 
 function GifViewer({ handleImageClick }) {
   const [gif, setGif] = useState([]);
-  const [numGifs, setNumGifs] = useState(9);
+  const [numGifs, setNumGifs] = useState('3'); // Initial state set to '3'
   const fetchedGifsRef = useRef([]);
-  
 
   useEffect(() => {
     fetchGif();
   }, []);
 
   const fetchGif = async () => {
-    console.log('Fetching GIFs...')
+    console.log('Fetching GIFs...');
     try {
-      if (fetchedGifsRef.current.length === 0) {
-        const apiKey = 'JYnU7IUVIe3raO5IATiHnEmsXBdhaTWg';
-        const fetchedGifs = [];
-        for (let i = 0; i < numGifs; i++) {
-          const response = await fetch(`https://api.giphy.com/v1/gifs/random?api_key=${apiKey}&tag=&rating=g`);
-          const data = await response.json();
-          fetchedGifs.push(data.data);
-        }
-        fetchedGifsRef.current = fetchedGifs;
-        setGif(fetchedGifs);
-      } else {
-        setGif(fetchedGifsRef.current);
+      const apiKey = 'uQB4hZ2aP7ZEBsexGPdnVkRHk08iBHgk';
+      const fetchedGifs = [];
+      for (let i = 0; i < 9; i++) { // Fetch 9 GIFs regardless of the selected number
+        const response = await fetch(`https://api.giphy.com/v1/gifs/random?api_key=${apiKey}&tag=&rating=g`);
+        const data = await response.json();
+        fetchedGifs.push(data.data);
       }
+      fetchedGifsRef.current = fetchedGifs;
+      setGif(fetchedGifsRef.current.slice(0, parseInt(numGifs))); // Update displayed GIFs based on the selected number
       console.log('GIFs fetched successfully');
     } catch (error) {
       console.error('Error fetching gifs:', error);
@@ -43,44 +37,43 @@ function GifViewer({ handleImageClick }) {
     setGif(shuffledGifs);
   };
 
-  const handleNumGifsChange = (event) => {
-    const newNumGifs = parseInt(event.target.value);
-    setNumGifs(newNumGifs);
-    setGif(fetchedGifsRef.current.slice(0, newNumGifs)); // Update displayed GIFs based on new number
-  };  
-
- 
+  const handleNumGifsChange = (value) => {
+    setNumGifs(value);
+    setGif(fetchedGifsRef.current.slice(0, parseInt(value))); // Update displayed GIFs based on the selected number
+  };
 
   return (
     <>
-      <SimpleGrid  spacing='40px'  minChildWidth='120px'>  
-            {numGifs > 0 && gif.map((gif, id) => (
-              <Card key={gif.id} height={gif.images.original.fixed_height}>
-                <Image 
-                    src={gif.images.original.url} 
-                    alt={`GIF ${id + 1}`} 
-                    borderRadius='lg'
-                    width="100%"
-                    height="100%"
-                    objectFit="cover"
-                    onClick={() => { handleImageClick(gif.id); shuffleImages(); }}
-                    cursor="pointer"
-                  />    
-                </Card>
-            ))}
+      <SimpleGrid spacing='40px' minChildWidth='120px'>  
+        {numGifs > 0 && gif.map((gifItem, id) => (
+          <Card key={gifItem.id} height={gifItem.images.original.fixed_height}>
+            <Image 
+              src={gifItem.images.original.url} 
+              alt={`GIF ${id + 1}`} 
+              borderRadius='lg'
+              width="100%"
+              height="100%"
+              objectFit="cover"
+              onClick={() => { handleImageClick(gifItem.id); shuffleImages(); }}
+              cursor="pointer"
+            />    
+          </Card>
+        ))}
       </SimpleGrid>  
 
       <div className="controls">
         <label htmlFor="numGifs">Number of GIFs:</label>
-        <select id="numGifs" value={numGifs} onChange={handleNumGifsChange}>
-          <option value="3">3 GIFs</option>
-          <option value="6">6 GIFs</option>
-          <option value="9">9 GIFs</option>
-        </select>
+        <RadioGroup onChange={(value) => handleNumGifsChange(value)} value={numGifs}>
+          <Stack direction='row'>
+            <Radio value="3" colorScheme='green'>Easy</Radio>
+            <Radio value="6" colorScheme='yellow'>Medium</Radio>
+            <Radio value="9" colorScheme='red'>Hard</Radio>
+          </Stack>
+        </RadioGroup>
         <button onClick={shuffleImages}>Shuffle GIFs</button>
       </div>
     </>
-    );
+  );
 }
 
 export default GifViewer;
