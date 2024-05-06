@@ -27,11 +27,11 @@ function App() {
   return (
   
       <div>
-        <Header score={score}  bestScore={bestScore}/>
-        <GifViewer handleImageClick={handleImageClick}/>
+      <Header score={score} bestScore={bestScore} />
+      <GifViewer handleImageClick={handleImageClick} />
       </div>
     
   )
 }
 
-export default  App
+export default App
